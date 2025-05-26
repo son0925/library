@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "book")
@@ -30,7 +30,7 @@ public class BookEntity extends BaseEntity<BookRequest> {
     private String publisher; // 출판사
 
     @Column(nullable = false)
-    private LocalDateTime publicationAt; // 출간년도
+    private LocalDate publicationAt; // 출간년도
 
     @Column(nullable = false)
     private String imageUrl;
@@ -41,6 +41,7 @@ public class BookEntity extends BaseEntity<BookRequest> {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Category category;
+
 
     @Override
     public void updateFromRequest(BookRequest request) {

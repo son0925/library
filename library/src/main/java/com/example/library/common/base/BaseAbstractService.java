@@ -5,7 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public abstract class BaseAbstractService<ENTITY extends BaseEntity<REQ>, REQ, RES, REPO extends JpaRepository<ENTITY, Integer>, CONV extends BaseAbstractConverter<ENTITY, REQ, RES>> implements BaseInterfaceService<REQ, RES> {
+public abstract class BaseAbstractService<ENTITY extends BaseEntity<REQ>,
+        REQ,
+        RES,
+        REPO extends JpaRepository<ENTITY, Integer>,
+        CONV extends BaseAbstractConverter<ENTITY, REQ, RES>>
+        implements BaseInterfaceService<REQ, RES> {
 
     protected final REPO repository;
     protected final CONV converter;

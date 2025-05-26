@@ -1,5 +1,7 @@
 package com.example.library.common.base;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public interface BaseInterfaceConverter<ENTITY, REQ, RES> {
@@ -9,5 +11,7 @@ public interface BaseInterfaceConverter<ENTITY, REQ, RES> {
     public ENTITY toEntity(REQ request);
 
     public List<RES> toResponseList(List<ENTITY> entityList);
+
+    public Page<RES> toResponsePage(Page<ENTITY> entityList);
 
 }

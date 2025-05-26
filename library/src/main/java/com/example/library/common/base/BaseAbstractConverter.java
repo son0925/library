@@ -1,5 +1,7 @@
 package com.example.library.common.base;
 
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public abstract class BaseAbstractConverter<ENTITY, REQ, RES> implements BaseInterfaceConverter<ENTITY, REQ, RES> {
@@ -11,4 +13,10 @@ public abstract class BaseAbstractConverter<ENTITY, REQ, RES> implements BaseInt
                 .toList()
                 ;
     }
+
+    @Override
+    public Page<RES> toResponsePage(Page<ENTITY> entityPage) {
+        return entityPage.map(this::toResponse);
+    }
+
 }

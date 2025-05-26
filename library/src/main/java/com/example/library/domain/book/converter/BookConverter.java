@@ -16,6 +16,7 @@ public class BookConverter extends BaseAbstractConverter<BookEntity, BookRequest
                 .price(bookEntity.getPrice())
                 .imageUrl(bookEntity.getImageUrl())
                 .author(bookEntity.getAuthor())
+                .publisher(bookEntity.getPublisher())
                 .publicationAt(bookEntity.getPublicationAt())
                 .category(bookEntity.getCategory())
                 .build()
@@ -24,6 +25,15 @@ public class BookConverter extends BaseAbstractConverter<BookEntity, BookRequest
 
     @Override
     public BookEntity toEntity(BookRequest request) {
-        return null;
+        return BookEntity.builder()
+                .title(request.getTitle())
+                .author(request.getAuthor())
+                .price(request.getPrice())
+                .category(request.getCategory())
+                .publisher(request.getPublisher())
+                .publicationAt(request.getPublicationAt())
+                .description(request.getDescription())
+                .build()
+                ;
     }
 }

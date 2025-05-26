@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,8 +24,16 @@ public class BookResponse {
 
     private int price;
 
-    private LocalDateTime publicationAt;
+    private String publisher;
+
+    private LocalDate publicationAt;
 
     private Category category;
+
+    private int totalCount;
+
+    private int availableCount;
+
+    private List<LocalDate> returnDateList;
 
 }

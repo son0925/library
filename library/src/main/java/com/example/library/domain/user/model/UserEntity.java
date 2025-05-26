@@ -47,4 +47,9 @@ public class UserEntity extends BaseEntity<UserRequest> {
         this.name = request.getName();
         this.phone = request.getPhone();
     }
+
+    public void setSuspended() {
+        this.suspendedAt = LocalDateTime.now();
+        this.status = UserStatus.SUSPENDED;
+    }
 }
