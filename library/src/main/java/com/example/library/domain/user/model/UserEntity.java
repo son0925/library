@@ -15,7 +15,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserEntity extends BaseEntity<UserRequest> {
+public class UserEntity extends BaseEntity {
+
+    @Column(nullable = false, unique = true)
+    private String username;
 
     @Column(nullable = false)
     private String password;
@@ -41,7 +44,6 @@ public class UserEntity extends BaseEntity<UserRequest> {
 
     private LocalDateTime suspendedAt;
 
-    @Override
     public void updateFromRequest(UserRequest request) {
         this.memo = request.getMemo();
         this.name = request.getName();

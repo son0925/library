@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BookLoansEntity extends BaseEntity<BookLoansRequest> {
+public class BookLoansEntity extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -28,11 +28,6 @@ public class BookLoansEntity extends BaseEntity<BookLoansRequest> {
     private LocalDateTime startAt; // 대출일
 
     private LocalDateTime endAt; // 반납일(대출 중에는 null)
-
-    @Override
-    public void updateFromRequest(BookLoansRequest request) {
-
-    }
 
     public void returnBook(LocalDateTime now) {
         this.endAt = now;

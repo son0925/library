@@ -32,4 +32,20 @@ public class UserService extends BaseAbstractService<
         return repository.findByPhone(phone)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     }
+
+    public UserEntity findByUsernameWithThrow(String username) {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException(""));
+    }
+
+    public UserEntity findByUsernameWithThrow(String username, Exception exception) throws Exception {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> exception);
+    }
+
+    public UserEntity findByUsername(String username) {
+        return repository.findByUsername(username)
+                .orElse(null)
+                ;
+    }
 }

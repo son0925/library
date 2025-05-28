@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BookEntity extends BaseEntity<BookRequest> {
+public class BookEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
@@ -43,8 +43,4 @@ public class BookEntity extends BaseEntity<BookRequest> {
     private Category category;
 
 
-    @Override
-    public void updateFromRequest(BookRequest request) {
-
-    }
 }
