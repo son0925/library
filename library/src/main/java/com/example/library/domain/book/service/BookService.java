@@ -26,6 +26,11 @@ public class BookService extends BaseAbstractService<
         super(repository, converter);
     }
 
+    @Override
+    protected void updateField(BookEntity entity, BookRequest request) {
+
+    }
+
     /**
      * 검색 필터
      * 1. 카테고리

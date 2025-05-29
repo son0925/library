@@ -12,13 +12,14 @@ public class CustomUserDetails implements UserDetails {
 
     private final UserEntity user;
 
-    CustomUserDetails(UserEntity user) {
+    public CustomUserDetails(UserEntity user) {
         this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        System.out.println("role : " + user.getRole().toString());
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
     }
 
     @Override

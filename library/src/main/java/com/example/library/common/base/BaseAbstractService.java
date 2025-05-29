@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public abstract class BaseAbstractService<ENTITY extends BaseEntity<REQ>,
+public abstract class BaseAbstractService<ENTITY extends BaseEntity,
         REQ,
         RES,
         REPO extends JpaRepository<ENTITY, Integer>,
@@ -57,7 +57,7 @@ public abstract class BaseAbstractService<ENTITY extends BaseEntity<REQ>,
     public RES update(Integer id, REQ request) {
         ENTITY entity = findByIdWithThrow(id);
 
-        entity.updateFromRequest(request);
+        updateField(entity, request);
 
         return converter.toResponse(entity);
     }
@@ -72,4 +72,6 @@ public abstract class BaseAbstractService<ENTITY extends BaseEntity<REQ>,
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not Found"));
     }
+
+    protected abstract void updateField(ENTITY entity, REQ request);
 }

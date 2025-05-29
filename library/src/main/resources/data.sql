@@ -1,7 +1,7 @@
-INSERT INTO users (id, password, role, name, phone, memo, status, create_at) VALUES
-(1, 'admin123!', 'ADMIN', '관리자', '010-1111-1111', '도서관 관리자', 'ACTIVE', CURRENT_TIMESTAMP),
-(2, 'user1234', 'USER', '홍길동', '010-2222-2222', '일반 유저 1', 'ACTIVE', CURRENT_TIMESTAMP),
-(3, 'user5678', 'USER', '김영희', '010-3333-3333', '일반 유저 2', 'ACTIVE', CURRENT_TIMESTAMP);
+INSERT INTO users (id, password, role, name, username, phone, memo, status, create_at) VALUES
+(1, 'admin123!', 'ADMIN', '관리자', 'admin@test.com', '010-1111-1111', '도서관 관리자', 'ACTIVE', CURRENT_TIMESTAMP),
+(2, 'user1234', 'USER', '홍길동', 'hong@test.com', '010-2222-2222', '일반 유저 1', 'ACTIVE', CURRENT_TIMESTAMP),
+(3, 'user5678', 'USER', '김영희', 'kim@test.com', '010-3333-3333', '일반 유저 2', 'ACTIVE', CURRENT_TIMESTAMP);
 
 
 

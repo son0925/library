@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 public abstract class BaseAbstractController<
-        ENTITY extends BaseEntity<REQ>,
+        ENTITY extends BaseEntity,
         REQ,
         RES,
         REPO extends JpaRepository<ENTITY, Integer>,

@@ -22,6 +22,11 @@ public class UserService extends BaseAbstractService<
         super(userRepository, userConverter);
     }
 
+    @Override
+    protected void updateField(UserEntity entity, UserRequest request) {
+
+    }
+
     public void throwIfSuspended(UserEntity user) {
         if (user.getStatus().equals(UserStatus.SUSPENDED)) {
             throw new SuspendedException();

@@ -7,17 +7,21 @@ import com.example.library.domain.book.model.BookEntity;
 import com.example.library.domain.book.service.BookService;
 import com.example.library.domain.book_loans.converter.BookLoansConverter;
 import com.example.library.domain.book_loans.model.BookLoansEntity;
+import com.example.library.domain.book_loans.model.BookLoansInfoResponse;
 import com.example.library.domain.book_loans.model.BookLoansRequest;
 import com.example.library.domain.book_loans.model.BookLoansResponse;
 import com.example.library.domain.book_loans.repository.BookLoansRepository;
 import com.example.library.domain.user.model.UserEntity;
 import com.example.library.domain.user.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Slf4j
 @Service
 public class BookLoansService extends BaseAbstractService<
         BookLoansEntity,
@@ -46,8 +50,8 @@ public class BookLoansService extends BaseAbstractService<
 
     // 책 대출
     @Transactional
-    public BookLoansResponse bookLoans(String phone, Integer bookId) {
-        UserEntity user = userService.findByPhoneWithThrow(phone);
+    public BookLoansResponse bookLoans(Integer userId, Integer bookId) {
+        UserEntity user = userService.findByIdWithThrow(userId);
         BookEntity book = bookService.findByIdWithThrow(bookId);
 
         // 대출 할 수 없을 때 Exception
@@ -55,6 +59,7 @@ public class BookLoansService extends BaseAbstractService<
 
         // 책 대출하기
         BookLoansEntity bookLoans = converter.toEntity(user, book);
+        log.info("BookLoans : {}", bookLoans);
         BookLoansEntity newEntity = repository.save(bookLoans);
 
         return converter.toResponse(newEntity);
@@ -62,11 +67,8 @@ public class BookLoansService extends BaseAbstractService<
 
     // 책 반납하기
     @Transactional
-    public ResponseEntity<BookLoansResponse> returnBook(Integer bookLoansId, String phone) {
-        BookLoansEntity bookLoans = findByIdWithThrow(bookLoansId);
-
-        // 현재 빌리고 있는 소유자가 아닌 경우
-        throwIfNotOwner(bookLoans, phone);
+    public ResponseEntity<BookLoansResponse> returnBook(Integer bookId) {
+        BookLoansEntity bookLoans = findByBookIdWithThrow(bookId);
 
         // 책 반납하기
         bookLoans.returnBook(LocalDateTime.now());
@@ -82,16 +84,21 @@ public class BookLoansService extends BaseAbstractService<
         return ResponseEntity.ok(converter.toResponse(bookLoans));
     }
 
-    // 대출 기간을 지났는지
-    private boolean isOverdue(BookLoansEntity bookLoans) {
-        return bookLoans.getStartAt().plusDays(bookLoansConfig.getLoanPeriodDays()).isAfter(bookLoans.getEndAt());
+    // TODO 자신이 빌린 책도 데이터 가져와야하냐
+    // 자신이 빌린 책 리스트 불러오기
+    public List<BookLoansInfoResponse> getBookLoansList(Integer userId) {
+        UserEntity user = userService.findByIdWithThrow(userId);
+        List<BookLoansEntity> bookLoansEntityList = findAllLoansHistoryByUser(user);
+        return converter.toInfoResponseList(bookLoansEntityList);
     }
 
-    // 현재 빌리고 있는 소유자가 아닌 경우
-    private void throwIfNotOwner(BookLoansEntity bookLoans, String phone) {
-        if (!bookLoans.getUser().getPhone().equals(phone)) {
-            throw new BadRequestException();
-        }
+    private List<BookLoansEntity> findAllLoansHistoryByUser(UserEntity user) {
+        return repository.findAllByUser(user);
+    }
+
+    // 대출 기간을 지났는지
+    private boolean isOverdue(BookLoansEntity bookLoans) {
+        return bookLoans.getStartAt().plusDays(bookLoansConfig.getLoanPeriodDays()).isBefore(bookLoans.getEndAt());
     }
 
     // 대출 불가능 할 때 Exception
@@ -110,7 +117,7 @@ public class BookLoansService extends BaseAbstractService<
 
     // 대출 할 수 있는 책을 초과했을 때
     private void throwIfOverLoanLimit(UserEntity user) {
-        if (countBookLoans(user) > bookLoansConfig.getMaxBooksPerUser()) {
+        if (countBookLoans(user) >= bookLoansConfig.getMaxBooksPerUser()) {
             throw new BadRequestException();
         }
     }
@@ -120,4 +127,14 @@ public class BookLoansService extends BaseAbstractService<
         return bookLoansRepository.countByUserAndEndAtIsNull(user);
     }
 
+    private BookLoansEntity findByBookIdWithThrow(Integer bookId) {
+        BookEntity book = bookService.findByIdWithThrow(bookId);
+        return bookLoansRepository.findByBookAndEndAtIsNull(book)
+                .orElseThrow(BadRequestException::new);
+    }
+
+    @Override
+    protected void updateField(BookLoansEntity entity, BookLoansRequest request) {
+
+    }
 }

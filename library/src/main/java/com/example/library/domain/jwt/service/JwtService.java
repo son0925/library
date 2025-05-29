@@ -3,6 +3,8 @@ package com.example.library.domain.jwt.service;
 import com.example.library.common.enums.TokenType;
 import com.example.library.common.exception.BadRequestException;
 import com.example.library.config.JwtConfig;
+import com.example.library.domain.auth.model.CustomUserDetails;
+import com.example.library.domain.auth.service.CustomUserDetailsService;
 import com.example.library.domain.jwt.model.RefreshTokenEntity;
 import com.example.library.domain.jwt.model.TokenResponse;
 import com.example.library.domain.jwt.repository.RefreshTokenRepository;
@@ -13,6 +15,8 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +29,7 @@ import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.util.Date;
 
+@Slf4j
 @Service
 public class JwtService {
 
@@ -35,12 +40,12 @@ public class JwtService {
     private final SecretKey refreshKey;
 
     private final UserService userService;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtService(JwtConfig jwtConfig,
-                      UserDetailsService userDetailsService,
+                      @Lazy CustomUserDetailsService customUserDetailsService,
                       UserService userService,
                       RefreshTokenRepository refreshTokenRepository) {
         this.jwtConfig = jwtConfig;
@@ -48,7 +53,7 @@ public class JwtService {
         this.accessParser = Jwts.parser().verifyWith(accessKey).build();
         this.refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(jwtConfig.getRefreshSecretKey()));
         this.refreshParser = Jwts.parser().verifyWith(refreshKey).build();
-        this.userDetailsService = userDetailsService;
+        this.customUserDetailsService = customUserDetailsService;
         this.userService = userService;
         this.refreshTokenRepository = refreshTokenRepository;
     }
@@ -61,6 +66,7 @@ public class JwtService {
 
         // 유효기간
         Date expiration = getExpiration(type);
+        log.info("expiration : {}", expiration.getTime());
         // 비밀키
         SecretKey secretKey = getSecretKey(type);
 
@@ -78,8 +84,9 @@ public class JwtService {
     // TODO ExceptionHandler 만들기
     public Authentication verifyToken(String token) throws JwtException, UsernameNotFoundException {
         String username = accessParser.parseSignedClaims(token).getPayload().getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
+        log.info("username : {}", username);
+        CustomUserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     @Transactional
@@ -127,6 +134,7 @@ public class JwtService {
     private Date getExpiration(TokenType type) {
         Duration duration = getDuration(type);
         Date now = new Date();
+        log.info("now : {}", now.getTime());
         return new Date(now.getTime() + duration.toMillis());
     }
 

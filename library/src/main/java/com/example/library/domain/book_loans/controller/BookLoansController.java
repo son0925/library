@@ -1,6 +1,7 @@
 package com.example.library.domain.book_loans.controller;
 
 import com.example.library.domain.auth.model.CustomUserDetails;
+import com.example.library.domain.book_loans.model.BookLoansRequest;
 import com.example.library.domain.book_loans.model.BookLoansResponse;
 import com.example.library.domain.book_loans.serivce.BookLoansService;
 import lombok.RequiredArgsConstructor;
@@ -16,21 +17,18 @@ public class BookLoansController {
     private final BookLoansService bookLoansService;
 
     // 책 대출
-    @PostMapping("/{id}")
+    @PostMapping
     public BookLoansResponse bookLoans(
-            @PathVariable Integer id,
-            @AuthenticationPrincipal CustomUserDetails user
+            @RequestBody BookLoansRequest request
     ) {
-        return bookLoansService.bookLoans(user.getUsername(), id);
+        return bookLoansService.bookLoans(request.getUserId(), request.getBookId());
     }
 
     // 책 반납
-    @PutMapping("/{bookLoansId}")
+    @PutMapping("/{bookId}")
     public ResponseEntity<BookLoansResponse> returnBook(
-            @PathVariable Integer bookLoansId,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails
+            @PathVariable Integer bookId
     ) {
-        return bookLoansService.returnBook(bookLoansId, customUserDetails.getUsername());
+        return bookLoansService.returnBook(bookId);
     }
-
 }

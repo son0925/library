@@ -13,4 +13,8 @@ public class BookLoansResponse {
 
     private Integer id;
 
+    private String bookName;
+
+    private String description;
+
 }

@@ -2,15 +2,14 @@ package com.example.library.domain.auth.controller;
 
 import com.example.library.domain.auth.model.AccessTokenRequest;
 import com.example.library.domain.auth.service.TokenAuthenticationService;
+import com.example.library.domain.jwt.model.RefreshAccessTokenRequest;
 import com.example.library.domain.jwt.model.TokenResponse;
 import com.example.library.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -26,11 +25,13 @@ public class AuthController {
         return tokenAuthenticationService.generateToken(request);
     }
 
+
     @PostMapping("/login/token")
     public TokenResponse signup(
-            @RequestBody String requestToken
+            @RequestBody RefreshAccessTokenRequest request
     ) {
-        return tokenAuthenticationService.getAccessTokenByRefreshToken(requestToken);
+        log.info("requestToken : {}", request);
+        return tokenAuthenticationService.getAccessTokenByRefreshToken(request.getRefreshToken());
     }
 
 }

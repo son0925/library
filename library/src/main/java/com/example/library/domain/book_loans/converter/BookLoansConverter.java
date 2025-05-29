@@ -3,19 +3,26 @@ package com.example.library.domain.book_loans.converter;
 import com.example.library.common.base.BaseAbstractConverter;
 import com.example.library.domain.book.model.BookEntity;
 import com.example.library.domain.book_loans.model.BookLoansEntity;
+import com.example.library.domain.book_loans.model.BookLoansInfoResponse;
 import com.example.library.domain.book_loans.model.BookLoansRequest;
 import com.example.library.domain.book_loans.model.BookLoansResponse;
 import com.example.library.domain.user.model.UserEntity;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 public class BookLoansConverter extends BaseAbstractConverter<BookLoansEntity, BookLoansRequest, BookLoansResponse> {
 
     @Override
     public BookLoansResponse toResponse(BookLoansEntity bookLoansEntity) {
-        return null;
+        return BookLoansResponse.builder()
+                .id(bookLoansEntity.getId())
+                .bookName(bookLoansEntity.getBook().getTitle())
+                .description("책 빌렸슴돠")
+                .build()
+                ;
     }
 
     @Override
@@ -32,4 +39,21 @@ public class BookLoansConverter extends BaseAbstractConverter<BookLoansEntity, B
                 ;
     }
 
+    public List<BookLoansInfoResponse> toInfoResponseList(List<BookLoansEntity> bookLoansEntityList) {
+        return bookLoansEntityList.stream()
+                .map(this::toInfoResponse)
+                .toList()
+                ;
+    }
+
+    private BookLoansInfoResponse toInfoResponse(BookLoansEntity entity) {
+        return BookLoansInfoResponse.builder()
+                .title(entity.getBook().getTitle())
+                .bookImageUrl(entity.getBook().getImageUrl())
+                .category(entity.getBook().getCategory())
+                .startAt(entity.getStartAt())
+                .endAt(entity.getEndAt())
+                .build()
+                ;
+    }
 }
