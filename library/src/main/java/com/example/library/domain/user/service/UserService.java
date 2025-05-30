@@ -9,6 +9,7 @@ import com.example.library.domain.user.model.UserResponse;
 import com.example.library.domain.user.model.UserStatus;
 import com.example.library.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService extends BaseAbstractService<

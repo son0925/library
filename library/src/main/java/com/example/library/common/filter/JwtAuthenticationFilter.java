@@ -45,8 +45,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Authentication authentication = jwtService.verifyToken(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-
-            // TODO NULL 터짐요
         } catch(ExpiredJwtException | SignatureException | IllegalArgumentException | UsernameNotFoundException e){
             // TODO 예외 처리하기
             log.error("Token Error");

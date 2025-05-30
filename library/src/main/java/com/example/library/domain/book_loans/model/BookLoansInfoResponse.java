@@ -18,6 +18,10 @@ public class BookLoansInfoResponse {
 
     private Category category;
 
+    private Integer userId;
+
+    private String userName;
+
     private LocalDateTime startAt;
 
     private LocalDateTime endAt;

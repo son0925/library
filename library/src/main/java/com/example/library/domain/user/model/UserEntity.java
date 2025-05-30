@@ -1,10 +1,12 @@
 package com.example.library.domain.user.model;
 
 import com.example.library.common.base.BaseEntity;
+import com.example.library.domain.book_loans.model.BookLoansEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -41,6 +43,9 @@ public class UserEntity extends BaseEntity {
     private LocalDateTime createAt;
 
     private LocalDateTime suspendedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BookLoansEntity> bookLoansEntityList;
 
     public void updateFromRequest(UserRequest request) {
         this.memo = request.getMemo();

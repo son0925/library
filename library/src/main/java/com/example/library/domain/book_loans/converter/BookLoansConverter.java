@@ -20,7 +20,7 @@ public class BookLoansConverter extends BaseAbstractConverter<BookLoansEntity, B
         return BookLoansResponse.builder()
                 .id(bookLoansEntity.getId())
                 .bookName(bookLoansEntity.getBook().getTitle())
-                .description("책 빌렸슴돠")
+                .description("성공")
                 .build()
                 ;
     }
@@ -51,6 +51,8 @@ public class BookLoansConverter extends BaseAbstractConverter<BookLoansEntity, B
                 .title(entity.getBook().getTitle())
                 .bookImageUrl(entity.getBook().getImageUrl())
                 .category(entity.getBook().getCategory())
+                .userId(entity.getUser().getId())
+                .userName(entity.getUser().getName())
                 .startAt(entity.getStartAt())
                 .endAt(entity.getEndAt())
                 .build()

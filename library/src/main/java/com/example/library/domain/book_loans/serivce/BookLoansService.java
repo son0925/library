@@ -84,12 +84,22 @@ public class BookLoansService extends BaseAbstractService<
         return ResponseEntity.ok(converter.toResponse(bookLoans));
     }
 
-    // TODO 자신이 빌린 책도 데이터 가져와야하냐
     // 자신이 빌린 책 리스트 불러오기
-    public List<BookLoansInfoResponse> getBookLoansList(Integer userId) {
+    public List<BookLoansInfoResponse> getUserHistoryList(Integer userId) {
         UserEntity user = userService.findByIdWithThrow(userId);
         List<BookLoansEntity> bookLoansEntityList = findAllLoansHistoryByUser(user);
         return converter.toInfoResponseList(bookLoansEntityList);
+    }
+
+    // 해당 책을 빌린 유저 리스트 불러오기
+    public List<BookLoansInfoResponse> getBookHistoryList(Integer bookId) {
+        BookEntity book = bookService.findByIdWithThrow(bookId);
+        List<BookLoansEntity> bookLoansEntityList = findAllLoansHistoryByBook(book);
+        return converter.toInfoResponseList(bookLoansEntityList);
+    }
+
+    private List<BookLoansEntity> findAllLoansHistoryByBook(BookEntity book) {
+        return repository.findAllByBook(book);
     }
 
     private List<BookLoansEntity> findAllLoansHistoryByUser(UserEntity user) {

@@ -27,7 +27,7 @@ public class BookController extends BaseAbstractController<
     }
 
     @GetMapping("/search")
-    public Page<BookResponse> searchBook(
+    public Page<BookSummaryResponse> searchBook(
             BookSearchRequest bookSearchRequest,
             @PageableDefault(size = 10) Pageable pageable
     ) {

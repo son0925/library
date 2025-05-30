@@ -23,7 +23,7 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
     @GetMapping("/{id}")
     public UserResponse read(
-            @PathVariable("id") Integer id
+            @PathVariable Integer id
     ) {
         return userService.read(id);
     }

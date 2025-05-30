@@ -2,10 +2,7 @@ package com.example.library.domain.book.service;
 
 import com.example.library.common.base.BaseAbstractService;
 import com.example.library.domain.book.converter.BookConverter;
-import com.example.library.domain.book.model.BookEntity;
-import com.example.library.domain.book.model.BookRequest;
-import com.example.library.domain.book.model.BookResponse;
-import com.example.library.domain.book.model.BookSearchRequest;
+import com.example.library.domain.book.model.*;
 import com.example.library.domain.book.repository.BookRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,7 +37,7 @@ public class BookService extends BaseAbstractService<
      * 5. 출간년도
      * 6. 가격(Minimum ~ Maximum)
      */
-    public Page<BookResponse> searchBook(BookSearchRequest request, Pageable page) {
+    public Page<BookSummaryResponse> searchBook(BookSearchRequest request, Pageable page) {
         Sort.Direction direction = request.asc() == null || request.asc() ? Sort.Direction.ASC : Sort.Direction.DESC;
         String sortBy = request.sortBy() == null ? "publicationAt" : request.sortBy();
 
@@ -50,18 +47,16 @@ public class BookService extends BaseAbstractService<
                 Sort.by(direction, sortBy)
         );
 
-        Page<BookEntity> bookEntityPage = repository.searchBook(
+        return repository.searchBook(
                 sortedPage,
                 request.category(),
-                request.title(),
+                request.title() == null ? "" : request.title(),
                 request.author(),
                 request.publisher(),
                 request.year(),
                 request.minimum(),
                 request.maximum()
         );
-
-        return converter.toResponsePage(bookEntityPage);
     }
 
 

@@ -19,4 +19,6 @@ public interface BookLoansRepository extends JpaRepository<BookLoansEntity, Inte
     Optional<BookLoansEntity> findByBookAndEndAtIsNull(BookEntity book);
 
     List<BookLoansEntity> findAllByUser(UserEntity user);
+
+    List<BookLoansEntity> findAllByBook(BookEntity book);
 }
